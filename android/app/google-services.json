@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "464927793039",
+    "project_id": "amoldai",
+    "storage_bucket": "amoldai.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464927793039:android:16bb7e4fa2324c7e39f5fa",
+        "android_client_info": {
+          "package_name": "com.example.amoldaiimgupload"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "464927793039-3tvr8gk5qepm1al7up0qnmps9nsouu2c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHz1irQ9PcuchMlzZyQu4OyMXS3wi98yk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "464927793039-3tvr8gk5qepm1al7up0qnmps9nsouu2c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464927793039:android:e8b7b67a26e6037039f5fa",
+        "android_client_info": {
+          "package_name": "com.example.pet_app_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "464927793039-3tvr8gk5qepm1al7up0qnmps9nsouu2c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHz1irQ9PcuchMlzZyQu4OyMXS3wi98yk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "464927793039-3tvr8gk5qepm1al7up0qnmps9nsouu2c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
