@@ -10,6 +10,8 @@ class ProductService {
   void uploadProducts({
     String productName,
     String userid,
+   double  latitudevalue,
+   double longitudevalue ,
 
     // List sizes,
     List images,
@@ -22,6 +24,8 @@ class ProductService {
       'image1': images[0],
       'image2': images[1],
       'image3': images[2],
+      'lat':latitudevalue,
+      'long': longitudevalue,
     });
   }
 }

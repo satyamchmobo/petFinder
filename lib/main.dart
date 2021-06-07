@@ -9,8 +9,16 @@ import 'package:pet_app_ui/theme/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+import 'controller/userDataController.dart';
+
+void main() => runApp(
+  ChangeNotifierProvider(
+    create: (context) => UserDataController(), 
+    child: MyApp()
+    )
+    );
 
 class MyApp extends StatelessWidget {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -36,14 +44,14 @@ class MyApp extends StatelessWidget {
 
 class RootPage extends StatefulWidget {
   String userid;
-RootPage({this.userid});
+  RootPage({this.userid});
   @override
   _RootPageState createState() => _RootPageState(userid: userid);
 }
 
 class _RootPageState extends State<RootPage> {
-   String userid;
-_RootPageState({this.userid});
+  String userid;
+  _RootPageState({this.userid});
   List<BottomNavigationBarItem> items = [
     BottomNavigationBarItem(
         icon: Icon(
@@ -123,7 +131,11 @@ _RootPageState({this.userid});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: getBody(),
+      body: ChangeNotifierProvider(
+    create: (context) => UserDataController(), 
+        
+        child: getBody()),
+        
       bottomNavigationBar: SizedBox(
         height: 100,
         child: BottomNavigationBar(

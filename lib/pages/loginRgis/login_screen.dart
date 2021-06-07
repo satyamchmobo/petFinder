@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pet_app_ui/constants/constants.dart';
+import 'package:pet_app_ui/controller/userDataController.dart';
+import 'package:pet_app_ui/model/userData.dart';
 import 'package:pet_app_ui/widgets/rounded_button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
@@ -87,81 +91,93 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: 24.0,
               ),
-              RoundedButton(
-                title: ' Log In',
-                color: Colors.indigo[400],
-                onPressed: () async {
-                  setState(() {
-                    showSpinner = true;
-                  });
-                  try {
-                    final user = await _auth.signInWithEmailAndPassword(
-                        email: email, password: password);
-
-                    
-
-                    if (user != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RootPage(
-                                 
-                                )),
-                      );
-                      print('logged in');
-                    }
-
+              Consumer<UserDataController>(builder: (context,
+                  UserDataController userDataController, Widget child) {
+                return RoundedButton(
+                  title: ' Log In',
+                  color: Colors.indigo[400],
+                  onPressed: () async {
+                    var userid;
                     setState(() {
-                      showSpinner = false;
+                      showSpinner = true;
                     });
-                  } catch (e) {
-                    switch (e.code) {
-                      case "ERROR_WRONG_PASSWORD":
-                        setState(() {
-                          showSpinner = false;
-                          msg = "Wong Password !";
-                        });
+                    try {
+                      final user = await _auth.signInWithEmailAndPassword(
+                          email: email, password: password);
+                      //FirebaseUser user = await _auth.currentUser();
+                      //var userid = user.uid;
+                      userid = user.user.uid;
+                      // uid = user.user.uid;
+                      UserData udataobj = new UserData(uid: userid);
 
-                        break;
-                      case "ERROR_USER_NOT_FOUND":
-                        setState(() {
-                          showSpinner = false;
-                          msg = "ERROR_USER_NOT_FOUND";
-                        });
+                      userDataController.setUserData(udataobj);
+                      print(userid);
 
-                        break;
-                      case "ERROR_NETWORK_REQUEST_FAILED":
-                        setState(() {
-                          showSpinner = false;
-                          msg = "Network Error! Check internet conection.";
-                        });
+                      if (user != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => RootPage()),
+                        );
+                        print('logged in');
+                      }
 
-                        break;
+                      setState(() {
+                        showSpinner = false;
+                      });
+                    } catch (e) {
+                      switch (e.code) {
+                        case "ERROR_WRONG_PASSWORD":
+                          setState(() {
+                            showSpinner = false;
+                            msg = "Wong Password !";
+                          });
 
-                      case "ERROR_INVALID_EMAIL":
-                        setState(() {
-                          showSpinner = false;
-                          msg = "Invalid Email Format !.";
-                        });
+                          break;
+                        case "ERROR_USER_NOT_FOUND":
+                          setState(() {
+                            showSpinner = false;
+                            msg = "ERROR_USER_NOT_FOUND";
+                          });
 
-                        break;
+                          break;
+                        case "ERROR_NETWORK_REQUEST_FAILED":
+                          setState(() {
+                            showSpinner = false;
+                            msg = "Network Error! Check internet conection.";
+                          });
 
-                      default:
-                        setState(() {
-                          showSpinner = false;
-                          msg = "";
-                          print(e);
-                        });
+                          break;
+
+                        case "ERROR_INVALID_EMAIL":
+                          setState(() {
+                            showSpinner = false;
+                            msg = "Invalid Email Format !.";
+                          });
+
+                          break;
+
+                        default:
+                          setState(() {
+                            showSpinner = false;
+                            msg = "";
+                            print(e);
+                          });
+                      }
+                      // UserData udataobj = new UserData(uid: userid);
+
+                      // userDataController.setUserData(udataobj);
+                      // print(userDataController.uid);
+                      // print("user id after login button ------------------");
+
+                      // setState(() {
+                      //   showSpinner = false;
+                      //   msg = 'Network Error! check Intenet connection.';
+                      // });
+                      // print(e);
                     }
-
-                    // setState(() {
-                    //   showSpinner = false;
-                    //   msg = 'Network Error! check Intenet connection.';
-                    // });
-                    // print(e);
-                  }
-                },
-              ),
+                  },
+                );
+              }),
             ],
           ),
         ),

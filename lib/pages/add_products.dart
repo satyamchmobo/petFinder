@@ -1,5 +1,11 @@
 import 'dart:io';
+import 'package:geolocator/geolocator.dart';
+import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/shape/gf_button_shape.dart';
+import 'package:getwidget/size/gf_size.dart';
+import 'package:pet_app_ui/constants/constants.dart';
 
+import 'package:pet_app_ui/controller/userDataController.dart';
 import 'package:pet_app_ui/db/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +14,9 @@ import 'package:flutter/material.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pet_app_ui/model/userData.dart';
 import 'package:pet_app_ui/theme/constant.dart';
+import 'package:provider/provider.dart';
 
 List<String> imageList = [];
 
@@ -17,24 +25,40 @@ enum SaleStatus { OnSale, NotOnSale }
 SaleStatus _currentSaleStatus = SaleStatus.NotOnSale;
 
 class AddProducts extends StatefulWidget {
-  String userid;
-  AddProducts({this.userid});
   @override
   _AddProductsState createState() => _AddProductsState();
 }
 
 class _AddProductsState extends State<AddProducts> {
-     String userid;
-
-    _AddProductsState({this.userid});
 
 
+
+  String hintTextOfLocationTextField = 'Tap this - >';
+  String intiVal = null;
+  String phno;
+
+  bool showSpinner = false;
+
+  double latitudevalue = 0;
+  double longitudevalue = 0;
+
+  void _getCurrentLocation() async {
+    final position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    print(position);
+    setState(() {
+      latitudevalue = position.latitude;
+      longitudevalue = position.longitude;
+      hintTextOfLocationTextField = 'Location Saved';
+      intiVal = "Location Saved";
+    });
+  }
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController productNameController = TextEditingController();
   @override
   initState() {
-    _signInAnonymously();
+    // _signInAnonymously();
     super.initState();
   }
 
@@ -99,217 +123,272 @@ class _AddProductsState extends State<AddProducts> {
           style: TextStyle(color: black),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          ///form, of whole products
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Upload 3 photos of pet case",
-                  style: TextStyle(
-                      color: primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
+      body: Consumer<UserDataController>(builder: (BuildContext context,
+          UserDataController userDataController, Widget child) {
+        print(userDataController.uid.toString());
+        return SingleChildScrollView(
+          child: Form(
+            ///form, of whole products
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Upload 3 photos of pet case",
+                    style: TextStyle(
+                        color: primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
                 ),
-              ),
-              // SizedBox(
-              //   height: 20,
-              // ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: OutlineButton(
-                        onPressed: () {
-                          // ignore: deprecated_member_use
-                          _selectImage(
-                              ImagePicker.pickImage(
-                                  source: ImageSource.gallery),
-                              1);
-                        },
-                        borderSide:
-                            BorderSide(color: Colors.teal[700], width: 1.0),
-                        child: _displayChild1(),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: OutlineButton(
-                        onPressed: () {
-                          // ignore: deprecated_member_use
-                          _selectImage(
-                              ImagePicker.pickImage(
-                                  source: ImageSource.gallery),
-                              2);
-                        },
-                        borderSide:
-                            BorderSide(color: Colors.teal[700], width: 1.0),
-                        child: _displayChild2(),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: OutlineButton(
-                        onPressed: () {
-                          // ignore: deprecated_member_use
-                          _selectImage(
-                              ImagePicker.pickImage(
-                                  source: ImageSource.gallery),
-                              3);
-                        },
-                        borderSide:
-                            BorderSide(color: Colors.teal[700], width: 1.0),
-                        child: _displayChild3(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Enter pet case information",
-                  style: TextStyle(
-                      color: primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
-                child: TextFormField(
-                  controller: productNameController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter pet Type Ex: Dog/Cat.',
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.teal[700], width: 1.0),
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.teal[700], width: 2.0),
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'You must enter the Product Name';
-                    } else if (value.length > 30) {
-                      return 'Product name cant have more than 10 letters';
-                    }
-                  },
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                // SizedBox(
+                //   height: 20,
+                // ),
+                Row(
                   children: <Widget>[
-                    Text('Case Type :'),
-                    Padding(
-                      padding: EdgeInsets.all(12),
-                      child: SizedBox(
-                        height: 35,
-                        width: 130,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.lightBlueAccent,
-                                    offset: Offset(0.5, 0.5),
-                                    blurRadius: 1)
-                              ]),
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
-                            child: DropdownButton<String>(
-                              value: currentCase,
-                              icon: Icon(Icons.expand_more),
-                              iconSize: 20,
-                              elevation: 16,
-                              style: TextStyle(color: Colors.black87),
-                              underline: Container(
-                                height: 0,
-                                width: 0,
-                              ),
-                              onChanged: (value) {
-                                changeSelectedCase(value);
-                              },
-                              items: caseType,
-                            ),
-                          ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: OutlineButton(
+                          onPressed: () {
+                            // ignore: deprecated_member_use
+                            _selectImage(
+                                ImagePicker.pickImage(
+                                    source: ImageSource.gallery),
+                                1);
+                          },
+                          borderSide:
+                              BorderSide(color: Colors.teal[700], width: 1.0),
+                          child: _displayChild1(),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: OutlineButton(
+                          onPressed: () {
+                            // ignore: deprecated_member_use
+                            _selectImage(
+                                ImagePicker.pickImage(
+                                    source: ImageSource.gallery),
+                                2);
+                          },
+                          borderSide:
+                              BorderSide(color: Colors.teal[700], width: 1.0),
+                          child: _displayChild2(),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: OutlineButton(
+                          onPressed: () {
+                            // ignore: deprecated_member_use
+                            _selectImage(
+                                ImagePicker.pickImage(
+                                    source: ImageSource.gallery),
+                                3);
+                          },
+                          borderSide:
+                              BorderSide(color: Colors.teal[700], width: 1.0),
+                          child: _displayChild3(),
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
-                child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Text("Short Description")),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: TextField(
-                  maxLines: 5,
-                  onChanged: (value) {
-                    //Do something with the user input.
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Need medical help...',
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Enter pet case information",
+                    style: TextStyle(
+                        color: primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 20.0, right: 20, top: 20),
+                  child: TextFormField(
+                    controller: productNameController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter pet Type Ex: Dog/Cat.',
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 20.0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.teal[700], width: 1.0),
+                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.teal[700], width: 2.0),
+                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.teal[700], width: 1.0),
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.teal[700], width: 2.0),
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'You must enter the Product Name';
+                      } else if (value.length > 30) {
+                        return 'Product name cant have more than 10 letters';
+                      }
+                    },
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text('Case Type :'),
+                      Padding(
+                        padding: EdgeInsets.all(12),
+                        child: SizedBox(
+                          height: 35,
+                          width: 130,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.lightBlueAccent,
+                                      offset: Offset(0.5, 0.5),
+                                      blurRadius: 1)
+                                ]),
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
+                              child: DropdownButton<String>(
+                                value: currentCase,
+                                icon: Icon(Icons.expand_more),
+                                iconSize: 20,
+                                elevation: 16,
+                                style: TextStyle(color: Colors.black87),
+                                underline: Container(
+                                  height: 0,
+                                  width: 0,
+                                ),
+                                onChanged: (value) {
+                                  changeSelectedCase(value);
+                                },
+                                items: caseType,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
+                  child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text("Short Description")),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: TextField(
+                    maxLines: 5,
+                    onChanged: (value) {
+                      //Do something with the user input.
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Need medical help...',
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 20.0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.teal[700], width: 1.0),
+                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.teal[700], width: 2.0),
+                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              // ),
+                      Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 90,
+                      width: 200,
+                      child: TextFormField(
+                        initialValue: intiVal,
+                        validator: (value) {
+                          value = intiVal;
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                        enabled: false,
+                        //obscureText: true,
+                        textAlign: TextAlign.center,
+                        onChanged: (value) {
+                         // password = value;
+                        },
+                        decoration: kTextfieldDecoration.copyWith(
+                          hintText: hintTextOfLocationTextField,
+                        ),
+                        //input dec property is defined in kTextField variable which is defined in consant.dart
+                      ),
+                    ),
+                    GFButton(
+                      onPressed: () {
+                        _getCurrentLocation();
+                      },
+                      text: "Save",
+                      icon: Icon(
+                        Icons.gps_fixed,
+                        color: Colors.white,
+                      ),
+                      shape: GFButtonShape.pills,
+                      size: GFSize.MEDIUM,
+                      fullWidthButton: false,
+                    ),
+                  ],
+                ),
 
-              FlatButton(
-                onPressed: () {
-                  validateAndUpload();
-                },
-                child: Text("Submit Case"),
-                color: primary,
-                textColor: Colors.white,
-              )
-            ],
+                // ),
+
+                Consumer<UserDataController>(builder: (BuildContext context,
+                    UserDataController userDataController, Widget child) {
+                  var userid = userDataController.uid;
+                  print(userid.toString());
+                  print("printing user id in button@@@@@@@@@@@@@@@@@@@@@@@2");
+                  return FlatButton(
+                    onPressed: () {
+                      validateAndUpload(userid);
+                    },
+                    child: Text("Submit Case"),
+                    color: primary,
+                    textColor: Colors.white,
+                  );
+                })
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
@@ -387,7 +466,7 @@ class _AddProductsState extends State<AddProducts> {
     }
   }
 
-  void validateAndUpload() async {
+  void validateAndUpload(userid) async {
     if (_formKey.currentState.validate()) {
       if (image1 != null && image2 != null && image3 != null) {
         // if (selectedSizes.isNotEmpty) {
@@ -450,10 +529,13 @@ class _AddProductsState extends State<AddProducts> {
         // with use of product.dart containing crud code for firestore
         //database
         if (imageList[2] != null) {
+          print(userid);
+          print("printing userid from model-0=0-0=-0-=0-=0-=0-=0-=0=-0-=0");
           _productService.uploadProducts(
             userid: userid,
             productName: productNameController.text,
-
+         latitudevalue :latitudevalue,
+          longitudevalue :longitudevalue,
             // sizes: selectedSizes,
             images: imageList,
           );

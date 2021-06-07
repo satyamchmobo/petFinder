@@ -32,8 +32,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   double latitudevalue = 0;
   double longitudevalue = 0;
   final _formKey = GlobalKey<FormState>();
-
   void _getCurrentLocation() async {
+   // bool serviceEnabled;
+      
     final position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     print(position);
@@ -181,6 +182,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     GFButton(
                       onPressed: () {
+                        
                         _getCurrentLocation();
                       },
                       text: "Save",
@@ -237,7 +239,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         if (newUser != null) {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => RootPage(userid: userid,)),
+                            MaterialPageRoute(
+                                builder: (context) => RootPage(
+                                      userid: userid,
+                                    )),
                           );
                         }
                       } catch (e) {
