@@ -11,12 +11,12 @@ class UserDataController extends ChangeNotifier {
 
   UserDataController({this.uname, this.uid, this.lat, this.long, this.phoneno});
 
-  void setUserData(udata) {
-   // uname = udata.uname;
+  void setUserData(UserData udata) {
+   uname = udata.uname.toString();
     uid = udata.uid.toString();
-   // lat = udata.lat;
-   // long = udata.long;
- //   phoneno = udata.phoneno;
+   lat = udata.lat;
+   long = udata.long;
+   phoneno = udata.phoneno;
     // print(uid);
     // print("uid inside controller-=-------------");
     notifyListeners();

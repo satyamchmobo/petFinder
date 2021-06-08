@@ -43,28 +43,28 @@ class WalkGroupCard extends StatelessWidget {
                       SizedBox(height: 10,),
                       Row(
                         children: <Widget>[
-                          Icon(FontAwesomeIcons.users,size: 17,),
+                          Icon(FontAwesomeIcons.phone,size: 17,),
                           SizedBox(width: 15,),
                           Text(members,style: contentBlack,)
                         ],
                       ),
                       SizedBox(height: 10,),
-                      Row(
-                        children: <Widget>[
-                          Icon(Icons.account_circle,size: 20,),
-                          SizedBox(width: 15,),
-                          RichText(text: 
-                          TextSpan(
-                            text: "Organized by ",
-                            style: contentBlack,
-                            children: <TextSpan>[
-                              TextSpan(text: orgBy,style: TextStyle(color: primary)),
-                            ]
-                          )
-                          )
-                          // Text("Organized by Laura ",style: contentBlack,)
-                        ],
-                      ),
+                      // Row(
+                      //   children: <Widget>[
+                      //     Icon(Icons.account_circle,size: 20,),
+                      //     SizedBox(width: 15,),
+                      //     RichText(text: 
+                      //     TextSpan(
+                      //       text: "Organized by ",
+                      //       style: contentBlack,
+                      //       children: <TextSpan>[
+                      //         TextSpan(text: orgBy,style: TextStyle(color: primary)),
+                      //       ]
+                      //     )
+                      //     )
+                      //     // Text("Organized by Laura ",style: contentBlack,)
+                      //   ],
+                      // ),
                       SizedBox(height: 10,)
                     ],
                   ),

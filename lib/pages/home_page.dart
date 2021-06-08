@@ -15,6 +15,10 @@ class Homepage extends StatelessWidget {
     return Consumer<UserDataController>(builder:
         (context, UserDataController userDataController, Widget child) {
       print(userDataController.uid.toString());
+      //var username=userDataController.nam
+      var username = userDataController.uname;
+      var ud = userDataController.uid.toString();
+
       print(" printing in root home pageHHHHHHHHHHHHHH");
       return SafeArea(
           child: ListView(
@@ -32,10 +36,13 @@ class Homepage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Hi, Ferran",
-                      style: appTitle,
-                    ),
+                    Consumer<UserDataController>(builder: (context,
+                        UserDataController userDataController, Widget child) {
+                      return Text(
+                        "Hi, Amol",
+                        style: appTitle,
+                      );
+                    }),
                     InkWell(
                       onTap: () {
                         Navigator.push(
@@ -75,7 +82,7 @@ class Homepage extends StatelessWidget {
                 SizedBox(
                     width: size.width * 0.7,
                     child: Text(
-                      "Check out the new products, groups, events, places and more!",
+                      "You can see the cases below and add the cases besides! ",
                       style: contentBlack,
                     )),
                 SizedBox(
@@ -89,12 +96,12 @@ class Homepage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      "Walk groups".toUpperCase(),
+                      "Cases within -  5km".toUpperCase(),
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 15,
                       ),
                     ),
-                    Text("See All")
+                    Text("See All Cases")
                   ],
                 ),
                 SizedBox(
@@ -105,16 +112,16 @@ class Homepage extends StatelessWidget {
                   child: Row(
                     children: <Widget>[
                       WalkGroupCard(
-                        imgScr: "assets/images/card_dog_1.png",
-                        title: "Meet our lovely dogs walking with us",
-                        location: "Valencia, Spain",
-                        members: "8 memmbers",
-                        orgBy: "Laura",
+                        imgScr: "assets/images/dog2.jpg",
+                        title: "Case : Injury",
+                        location: "Tap to Get Location",
+                        members: "Contact to uploader",
+                        orgBy: "",
                       ),
                       WalkGroupCard(
                         imgScr: "assets/images/card_dog_2.png",
-                        title: "Meet our lovely dogs walking with us",
-                        location: "Valencia, Spain",
+                        title: "Case : Adoption",
+                        location: "Tap to Get Location",
                         members: "8 memmbers",
                         orgBy: "Laura",
                       ),

@@ -77,15 +77,15 @@ class _RootPageState extends State<RootPage> {
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
           ),
         )),
-    BottomNavigationBarItem(
-        icon: Icon(LineIcons.book, size: 27),
-        title: Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Text(
-            "Articles",
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          ),
-        )),
+    // BottomNavigationBarItem(
+    //     icon: Icon(LineIcons.book, size: 27),
+    //     title: Padding(
+    //       padding: const EdgeInsets.only(top: 8),
+    //       child: Text(
+    //         "Articles",
+    //         style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+    //       ),
+    //     )),
     BottomNavigationBarItem(
         icon: Icon(LineIcons.bell, size: 27),
         title: Padding(
@@ -109,12 +109,12 @@ class _RootPageState extends State<RootPage> {
   List<Widget> pages = [
     Homepage(),
     SearchPage(),
-    Center(
-      child: Text(
-        "Articles",
-        style: TextStyle(fontSize: 40),
-      ),
-    ),
+    // Center(
+    //   child: Text(
+    //     "Articles",
+    //     style: TextStyle(fontSize: 40),
+    //   ),
+    // ),
     Center(
       child: Text(
         "Notifications",
@@ -134,7 +134,8 @@ class _RootPageState extends State<RootPage> {
       body: ChangeNotifierProvider(
     create: (context) => UserDataController(), 
         
-        child: getBody()),
+        child: Consumer<UserDataController>(builder:
+        (context, UserDataController userDataController, Widget child){return getBody();})),
         
       bottomNavigationBar: SizedBox(
         height: 100,

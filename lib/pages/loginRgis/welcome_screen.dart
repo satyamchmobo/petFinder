@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:pet_app_ui/pages/loginRgis/login_screen.dart';
 import 'package:pet_app_ui/pages/loginRgis/registration_screen.dart';
+import 'package:pet_app_ui/theme/constant.dart';
 
 
 import 'package:pet_app_ui/widgets/rounded_button.dart';
@@ -66,7 +67,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             RoundedButton(
               title: 'Log In',
-              color: Colors.indigo[500],
+              color: primary,
               onPressed: () {
                   Navigator.push(
     context,
@@ -77,7 +78,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             RoundedButton(
               title: 'Register',
-              color: Colors.indigoAccent[400],
+              color: Colors.teal[700],
               onPressed: () {
                   Navigator.push(
     context,

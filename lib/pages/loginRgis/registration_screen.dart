@@ -202,7 +202,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 Text(msg),
                 RoundedButton(
                   title: 'Register',
-                  color: Colors.indigoAccent[400],
+                  color: Colors.teal[700],
                   onPressed: () async {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (_formKey.currentState.validate()) {

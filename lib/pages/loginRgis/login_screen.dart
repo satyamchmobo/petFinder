@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_app_ui/constants/constants.dart';
 import 'package:pet_app_ui/controller/userDataController.dart';
 import 'package:pet_app_ui/model/userData.dart';
+import 'package:pet_app_ui/theme/constant.dart';
 import 'package:pet_app_ui/widgets/rounded_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -95,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   UserDataController userDataController, Widget child) {
                 return RoundedButton(
                   title: ' Log In',
-                  color: Colors.indigo[400],
+                  color: primary,
                   onPressed: () async {
                     var userid;
                     setState(() {
@@ -107,8 +108,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       //FirebaseUser user = await _auth.currentUser();
                       //var userid = user.uid;
                       userid = user.user.uid;
+
+                      //  Firestore.instance.collection('users').document()
+
+                      // Fires
                       // uid = user.user.uid;
-                      UserData udataobj = new UserData(uid: userid);
+                      var usernameFromEmailid = email.substring(0, 4);
+                      UserData udataobj = new UserData(
+                        uid: userid,
+                        uname:usernameFromEmailid
+                      );
 
                       userDataController.setUserData(udataobj);
                       print(userid);

@@ -28,7 +28,7 @@ class DogCard extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child:  Padding(
                       padding: const EdgeInsets.only(right: 30),
-                      child: Text("Lola is lost in your neighborhood!Help us find her!",style:contentWhite,),
+                      child: Text("Help the helpless ones, Save a life! ",style:contentWhite,),
                     ),
                   ),
               ),
