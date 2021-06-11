@@ -13,12 +13,8 @@ import 'package:provider/provider.dart';
 
 import 'controller/userDataController.dart';
 
-void main() => runApp(
-  ChangeNotifierProvider(
-    create: (context) => UserDataController(), 
-    child: MyApp()
-    )
-    );
+void main() => runApp(ChangeNotifierProvider(
+    create: (context) => UserDataController(), child: MyApp()));
 
 class MyApp extends StatelessWidget {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -44,14 +40,19 @@ class MyApp extends StatelessWidget {
 
 class RootPage extends StatefulWidget {
   String userid;
-  RootPage({this.userid});
+  String username;
+
+  RootPage({this.userid, this.username});
   @override
-  _RootPageState createState() => _RootPageState(userid: userid);
+  _RootPageState createState() =>
+      _RootPageState(userid: userid, username: username);
 }
 
 class _RootPageState extends State<RootPage> {
+  String username;
+
   String userid;
-  _RootPageState({this.userid});
+  _RootPageState({this.userid, this.username});
   List<BottomNavigationBarItem> items = [
     BottomNavigationBarItem(
         icon: Icon(
@@ -106,8 +107,10 @@ class _RootPageState extends State<RootPage> {
         ))
   ];
   int selectedIndex = 0;
+
   List<Widget> pages = [
-    Homepage(),
+
+    HomePage(),
     SearchPage(),
     // Center(
     //   child: Text(
@@ -132,11 +135,14 @@ class _RootPageState extends State<RootPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ChangeNotifierProvider(
-    create: (context) => UserDataController(), 
-        
-        child: Consumer<UserDataController>(builder:
-        (context, UserDataController userDataController, Widget child){return getBody();})),
-        
+          create: (context) => UserDataController(),
+          child: Consumer<UserDataController>(builder:
+              (context, UserDataController userDataController, Widget child) {
+            print(userDataController.uid.toString());
+            print("in root page");
+
+            return getBody();
+          })),
       bottomNavigationBar: SizedBox(
         height: 100,
         child: BottomNavigationBar(

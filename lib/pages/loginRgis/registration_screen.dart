@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pet_app_ui/main.dart';
@@ -9,6 +10,7 @@ import 'package:pet_app_ui/constants/constants.dart';
 
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class RegistrationScreen extends StatefulWidget {
 //  static String id = 'registration_screen';
@@ -44,6 +46,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       hintTextOfLocationTextField = 'Location Saved';
       intiVal = "Location Saved";
     });
+        FlutterToast.showToast(msg: 'Location Saved Succesfulle !');
+    
   }
 
   @override
@@ -57,10 +61,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           padding: EdgeInsets.symmetric(horizontal: 24.0),
           child: Form(
             key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+            child: ListView(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                 
                 Flexible(
                   child: Hero(
                     tag: 'logo',
@@ -93,12 +98,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   height: 8.0,
                 ),
                 TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    return null;
-                  },
+                     validator: MultiValidator([
+                      RequiredValidator(errorText: "Email is required"),
+                      EmailValidator(errorText: "Enter correct email format")
+                    ]
+                    
+                    ),
                   keyboardType: TextInputType.emailAddress,
                   textAlign: TextAlign.center,
                   onChanged: (value) {
@@ -146,13 +151,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   //input dec property is defined in kTextField variable which is defined in consant.dart
                 ),
                 SizedBox(
-                  height: 50.0,
+                  height: 0.0,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(80.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Text("To get closest results"),
                 ),
-                Row(
+         
+
+               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -196,10 +203,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 1.0,
-                ),
-                Text(msg),
+                // SizedBox(
+                //   height: 1.0,
+                // ),
+              //  Text(msg),
                 RoundedButton(
                   title: 'Register',
                   color: Colors.teal[700],
@@ -242,6 +249,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             MaterialPageRoute(
                                 builder: (context) => RootPage(
                                       userid: userid,
+                                      username:name,
                                     )),
                           );
                         }

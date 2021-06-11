@@ -20,7 +20,7 @@ import 'package:pet_app_ui/theme/constant.dart';
 import 'package:provider/provider.dart';
 
 List<String> imageList = [];
-
+bool buttonStatus=true;
 enum SaleStatus { OnSale, NotOnSale }
 
 SaleStatus _currentSaleStatus = SaleStatus.NotOnSale;
@@ -51,6 +51,7 @@ class _AddProductsState extends State<AddProducts> {
       hintTextOfLocationTextField = 'Location Saved';
       intiVal = "Location Saved";
     });
+    FlutterToast.showToast(msg: 'Location Saved Succesfully  !');
   }
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -97,9 +98,13 @@ class _AddProductsState extends State<AddProducts> {
 
   Color white = Colors.white;
 
-  File image1 = File('');
-  File image2 = File('');
-  File image3 = File('');
+  // File image1=new File('');
+  // File image2=new File('');
+  // File image3=new File('');
+
+    File image1;
+  File image2;
+  File image3;
 
   // List<String> selectedSizes = <String>[]; //for selected checkboxes
 
@@ -236,9 +241,9 @@ class _AddProductsState extends State<AddProducts> {
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'You must enter the Product Name';
+                          return 'You must enter the Case Name';
                         } else if (value.length > 30) {
-                          return 'Product name cant have more than 10 letters';
+                          return 'Case name cant have more than 10 letters';
                         }
                       },
                     ),
@@ -374,16 +379,21 @@ class _AddProductsState extends State<AddProducts> {
                   Consumer<UserDataController>(builder: (BuildContext context,
                       UserDataController userDataController, Widget child) {
                     var userid = userDataController.uid;
+                    var phone = userDataController.phoneno;
                     print(userid.toString());
+                    print(phone.toString());
+
                     print("printing user id in button@@@@@@@@@@@@@@@@@@@@@@@2");
                     return FlatButton(
-                      onPressed: () {
-                        isLoading = true;
-                        validateAndUpload(userid);
+                    enable:
+                      onPressed: buttonStatus?  validateAndUpload(userid, phone):null,
+                       
+                      
                       },
                       child: Text("Submit Case"),
                       color: primary,
                       textColor: Colors.white,
+                      
                     );
                   })
                 ],
@@ -469,9 +479,12 @@ class _AddProductsState extends State<AddProducts> {
     }
   }
 
-  void validateAndUpload(userid) async {
+  void validateAndUpload(userid, phone) async {
     if (_formKey.currentState.validate()) {
-      if (image1 != null || image2 != null || image3 != null) {
+      if (image1 != null && image2 != null && image3 != null) {
+
+
+         isLoading = true;
         // if (selectedSizes.isNotEmpty) {
         String imageUrl1; //to hold downloadable link that will be
         //stores in database(firestore or RTDB)
@@ -541,12 +554,17 @@ class _AddProductsState extends State<AddProducts> {
             longitudevalue: longitudevalue,
             // sizes: selectedSizes,
             images: imageList,
+            casetype: currentCase,
+            phone: phone,
           );
         }
+        setState({
+buttonStatus=false;
+        });
 
         _formKey.currentState.reset();
         isLoading = false;
-        FlutterToast.showToast(msg: 'Case Added Succesfully');
+        FlutterToast.showToast(msg: 'Succesfully ,Case Added');
         // } else {
         //   FlutterToast.showToast(msg: "Select atleast one size");
         // }

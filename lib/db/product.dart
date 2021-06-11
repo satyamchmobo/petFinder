@@ -8,10 +8,12 @@ class ProductService {
   String collectionName = 'cases';
 
   void uploadProducts({
+    String casetype,
     String productName,
     String userid,
    double  latitudevalue,
    double longitudevalue ,
+   String phone,
 
     // List sizes,
     List images,
@@ -27,6 +29,8 @@ class ProductService {
       'lat':latitudevalue,
       'long': longitudevalue,
       'userid':userid,
+      'casetype':casetype,
+      'phone':phone,
     });
   }
 }
